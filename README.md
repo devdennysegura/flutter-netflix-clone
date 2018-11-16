@@ -9,9 +9,6 @@ Flutter App with the same style as Netflix for Android and iOS.
 <img src="screenshots/flutter_04.png" alt="screen" style="height: 300px;" />
 </div>
 
-
-![Image of React Native Netflix App](http://i.imgur.com/EEZCSCg.png)
-
 ## Server
 
 [Netflix NodeJS & MongoDB](https://github.com/devdennysegura/nodejs-server-Flutter-Netflix-App)
