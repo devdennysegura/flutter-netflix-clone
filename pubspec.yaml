@@ -1,0 +1,48 @@
+name: netflix_clone
+description: A new Flutter project.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+   - assets/images/1.jpg
+   - assets/images/2.jpg
+   - assets/images/3.jpg
+   - assets/images/default-image.png
+   - assets/images/Netflix-logo.png
+   - assets/images/netflix_icon.png
+   - assets/images/1.5x/netflix_icon.png
+   - assets/images/2.0x/netflix_icon.png
+   - assets/images/3.0x/netflix_icon.png
+   - assets/images/4.0x/netflix_icon.png
+   - assets/images/user.png
+   - assets/video/promo.mp4
+  fonts:
+    - family: GoogleSans
+      fonts:
+        - asset: assets/fonts/product-sans/regular.ttf
+          weight: 400
+        - asset: assets/fonts/product-sans/bold.ttf
+          weight: 700
+        - asset: assets/fonts/product-sans/bold-italic.ttf
+          style: italic
+          weight: 700
+        - asset: assets/fonts/product-sans/medium.ttf
+          weight: 600
+        - asset: assets/fonts/product-sans/medium-italic.ttf
+          style: italic
+          weight: 600
+        - asset: assets/fonts/product-sans/italic.ttf
+          style: italic
