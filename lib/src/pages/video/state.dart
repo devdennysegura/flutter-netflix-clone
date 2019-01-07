@@ -1,6 +1,6 @@
 part of netflix;
 
-class HomeState extends State<Home> {
+class VideoState extends State<Video> {
   int _counter = 0;
 
   void _incrementCounter() {

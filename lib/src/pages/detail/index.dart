@@ -1,9 +1,15 @@
 part of netflix;
 
-class Home extends StatefulWidget {
-  Home({Key key, this.title}) : super(key: key);
-  final String title;
+class TvShow extends StatefulWidget {
+  final double match;
+  final Result item;
+
+  TvShow({
+    Key key,
+    this.match,
+    this.item,
+  }) : super(key: key);
 
   @override
-  HomeState createState() => HomeState();
+  TvShowState createState() => TvShowState();
 }

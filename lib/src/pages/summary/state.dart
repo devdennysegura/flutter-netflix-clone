@@ -14,44 +14,26 @@ class SummaryState extends State<Summary> {
     "image":
         "http://static.tvmaze.com/uploads/images/original_untouched/0/663.jpg"
   };
-  List<dynamic> showsFirst = [
-    {
-      'key': 1,
-      'name': 'Suits',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/0/2432.jpg'
-    },
-    {
-      'key': 2,
-      'name': 'Modern Family',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/0/628.jpg'
-    },
-    {
-      'key': 3,
-      'name': 'The Flash',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/78/195988.jpg'
-    },
-    {
-      'key': 4,
-      'name': 'Supergirl',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/83/209955.jpg'
-    },
-    {
-      'key': 5,
-      'name': 'Designated Survivor',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/101/253490.jpg'
-    },
-    {
-      'key': 6,
-      'name': '24: Legacy',
-      'image':
-          'https://static.tvmaze.com/uploads/images/medium_portrait/90/225030.jpg'
-    }
-  ];
+
+  void goTo(String type) {
+    Application.router.navigateTo(
+      context,
+      '${Routes.filter}',
+      transition: TransitionType.nativeModal,
+      transitionDuration: const Duration(milliseconds: 200),
+      object: {'type': type},
+    );
+  }
+
+  void goToDetail(Result item, double match) {
+    Application.router.navigateTo(
+      context,
+      '${Routes.detail}',
+      transition: TransitionType.inFromRight,
+      transitionDuration: const Duration(milliseconds: 200),
+      object: {'match': match, 'show': item},
+    );
+  }
 
   List<Widget> renderMainGenres() {
     List<Widget> genres = List.from(tvShow['details']['genres'].map((g) {
@@ -70,180 +52,189 @@ class SummaryState extends State<Summary> {
     return genres;
   }
 
+  Widget renderTitle(String tag, String text) {
+    return Hero(
+      tag: tag,
+      child: FlatButton(
+        onPressed: () => goTo(tag),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            fontSize: 14.0,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          primary: true,
-          expandedHeight: screenSize.height * 0.65,
-          backgroundColor: Colors.black,
-          leading: Image.asset('assets/images/netflix_icon.png'),
-          titleSpacing: 20.0,
-          title: Title(
-            color: Colors.black,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Series',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
+    bloc.fetchAllMovies();
+    return StreamBuilder(
+      stream: bloc.allMovies,
+      builder: (context, AsyncSnapshot<List<ItemModel>> snapshot) {
+        if (snapshot.hasData) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                primary: true,
+                expandedHeight: screenSize.height * 0.65,
+                backgroundColor: Colors.black,
+                leading: Image.asset('assets/images/netflix_icon.png'),
+                titleSpacing: 20.0,
+                title: Title(
+                  color: Colors.black,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      renderTitle('Series', 'Series'),
+                      renderTitle('Películas', 'Películas'),
+                      renderTitle('Mi-lista', 'Mi lista'),
+                    ],
                   ),
                 ),
-                Text(
-                  'Películas',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
-                  ),
-                ),
-                Text(
-                  'Mi lista',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          flexibleSpace: FlexibleSpaceBar(
-            collapseMode: CollapseMode.pin,
-            background: Container(
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  Image.network(
-                    tvShow['image'],
-                    fit: BoxFit.cover,
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: FractionalOffset.topCenter,
-                        end: FractionalOffset.bottomCenter,
-                        stops: [0.1, 0.6, 1.0],
-                        colors: [
-                          Colors.black54,
-                          Colors.transparent,
-                          Colors.black
-                        ],
-                      ),
-                    ),
-                    child: Container(
-                      height: 40.0,
-                      width: screenSize.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 8.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    width: 3.0,
-                                    color: Color.fromRGBO(185, 3, 12, 1.0),
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                tvShow['name'].replaceAll(' ', '\n'),
-                                maxLines: 3,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  height: 0.65,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 30.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: renderMainGenres(),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                FlatButton(
-                                  textColor: Colors.white,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(Icons.add),
-                                      Text(
-                                        'Mi lista',
-                                        style: TextStyle(
-                                            fontSize: 10.0,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () => print('mi lista'),
-                                ),
-                                RaisedButton(
-                                  textColor: Colors.black,
-                                  color: Colors.white,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Icon(Icons.play_arrow),
-                                      Text(
-                                        'Reproducir',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () => print('Reproducir'),
-                                ),
-                                FlatButton(
-                                  textColor: Colors.white,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Icon(Icons.info_outline),
-                                      Text(
-                                        'Información',
-                                        style: TextStyle(
-                                            fontSize: 10.0,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                    ],
-                                  ),
-                                  onPressed: () => print('informacion'),
-                                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  background: Container(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        Image.network(
+                          tvShow['image'],
+                          fit: BoxFit.cover,
+                        ),
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end: FractionalOffset.bottomCenter,
+                              stops: [0.1, 0.6, 1.0],
+                              colors: [
+                                Colors.black54,
+                                Colors.transparent,
+                                Colors.black
                               ],
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                          child: Container(
+                            height: 40.0,
+                            width: screenSize.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 8.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          width: 3.0,
+                                          color:
+                                              Color.fromRGBO(185, 3, 12, 1.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      tvShow['name'].replaceAll(' ', '\n'),
+                                      maxLines: 3,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        height: 0.65,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 30.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: renderMainGenres(),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      FlatButton(
+                                        textColor: Colors.white,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Icon(Icons.add),
+                                            Text(
+                                              'Mi lista',
+                                              style: TextStyle(
+                                                  fontSize: 10.0,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () => print('mi lista'),
+                                      ),
+                                      RaisedButton(
+                                        textColor: Colors.black,
+                                        color: Colors.white,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Icon(Icons.play_arrow),
+                                            Text(
+                                              'Reproducir',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () => print('Reproducir'),
+                                      ),
+                                      FlatButton(
+                                        textColor: Colors.white,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Icon(Icons.info_outline),
+                                            Text(
+                                              'Información',
+                                              style: TextStyle(
+                                                  fontSize: 10.0,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ],
+                                        ),
+                                        onPressed: () => print('informacion'),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => ShowsList(
-                  items: showsFirst,
-                  onTap: () => print('show tapped'),
-                  title: 'Nuevos Lanzamientos',
                 ),
-          ),
-        )
-      ],
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => ShowsList(
+                        items: snapshot.data[index].results,
+                        onTap: goToDetail,
+                        title: snapshot.data[index].title,
+                      ),
+                  childCount: snapshot.data.length,
+                ),
+              )
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

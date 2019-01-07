@@ -3,23 +3,25 @@ part of netflix;
 class ShowsList extends StatelessWidget {
   final ScrollController controller = ScrollController();
   final String title;
+  final List<Result> items;
   final Function onTap;
-  final List<dynamic> items;
 
-  //passing props in react style
   ShowsList({
     this.title,
-    this.onTap,
     this.items,
+    this.onTap,
   });
 
   List<Widget> renderItems() {
     return items.map((item) {
-      return Container(
-        margin: EdgeInsets.symmetric(horizontal: 2.5),
-        width: 120.0,
-        height: 180.0,
-        child: Image.network(item['image']),
+      return InkWell(
+        onTap: () => onTap(item, 99.0),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 2.5),
+          width: 120.0,
+          height: 140.0,
+          child: Image.network(item.image, fit: BoxFit.cover),
+        ),
       );
     }).toList();
   }
