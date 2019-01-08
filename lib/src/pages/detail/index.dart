@@ -1,7 +1,7 @@
 part of netflix;
 
 class TvShow extends StatefulWidget {
-  final double match;
+  final int match;
   final Result item;
 
   TvShow({

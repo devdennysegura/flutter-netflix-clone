@@ -2,7 +2,7 @@
 
 Flutter App with the same style as Netflix for Android and iOS.
 
-<div style="display:flex;flex-direction:row;">
+<div style="display:flex;flex-direction:row;justify-content: space-between">
 <img src="screenshots/flutter_01.png" alt="screen_01" height="300" />
 <img src="screenshots/flutter_02.png" alt="screen_02" height="300" />
 <img src="screenshots/flutter_03.png" alt="screen_03" height="300" />

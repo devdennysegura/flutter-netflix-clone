@@ -25,7 +25,7 @@ class SummaryState extends State<Summary> {
     );
   }
 
-  void goToDetail(Result item, double match) {
+  void goToDetail(Result item, int match) {
     Application.router.navigateTo(
       context,
       '${Routes.detail}',

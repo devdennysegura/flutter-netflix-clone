@@ -15,7 +15,7 @@ class ShowsList extends StatelessWidget {
   List<Widget> renderItems() {
     return items.map((item) {
       return InkWell(
-        onTap: () => onTap(item, 99.0),
+        onTap: () => onTap(item, 99),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 2.5),
           width: 120.0,
