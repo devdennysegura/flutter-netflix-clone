@@ -18,6 +18,12 @@ var detailRouteHandler = Handler(
     return TvShow(match: object['match'], item: object['show']);
   },
 );
+var trailerRouteHandler = Handler(
+  handlerFunc: (BuildContext context, Map<String, List<String>> params,
+      [dynamic object]) {
+    return Video(title: object['title']);
+  },
+);
 var filterRouteHandler = Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params,
       [dynamic object]) {

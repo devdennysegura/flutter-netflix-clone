@@ -1,20 +1,7 @@
 part of netflix;
 
 class SummaryState extends State<Summary> {
-  dynamic tvShow = {
-    "details": {
-      "genres": ["Drama", "Crime"],
-      "year": "2011-09-20",
-      "description":
-          "<p><b>Unforgettable</b> follows Carrie Wells, an enigmatic former police detective with a rare condition that makes her memory so flawless that every place, every conversation, every moment of joy and every heartbreak is forever embedded in her mind. It's not just that she doesn't forget anything - she can't; except for one thing: the details that would help solve her sister's long-ago murder. Carrie has tried to put her past behind her, but she's unexpectedly reunited with her ex-boyfriend and partner, NYPD Detective Al Burns when she consults on a homicide case.</p>"
-    },
-    "_id": "5bedbf00a70245f2bbdd6a64",
-    "id": 89,
-    "name": "Unforgettable",
-    "image":
-        "http://static.tvmaze.com/uploads/images/original_untouched/0/663.jpg"
-  };
-
+  
   void goTo(String type) {
     Application.router.navigateTo(
       context,
@@ -33,6 +20,21 @@ class SummaryState extends State<Summary> {
       transitionDuration: const Duration(milliseconds: 200),
       object: {'match': match, 'show': item},
     );
+  }
+
+  void showTrailer() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]).then((e) {
+      Application.router.navigateTo(
+        context,
+        Routes.video,
+        object: {'title': 'Unforgettable'},
+        transition: TransitionType.inFromBottom,
+        transitionDuration: const Duration(milliseconds: 200),
+      );
+    });
   }
 
   List<Widget> renderMainGenres() {
@@ -71,7 +73,8 @@ class SummaryState extends State<Summary> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
+    final Result show = Result.fromJson(tvShow);
     bloc.fetchAllMovies();
     return StreamBuilder(
       stream: bloc.allMovies,
@@ -102,10 +105,7 @@ class SummaryState extends State<Summary> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: <Widget>[
-                        Image.network(
-                          tvShow['image'],
-                          fit: BoxFit.cover,
-                        ),
+                        Image.network(show.image, fit: BoxFit.cover),
                         DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -189,7 +189,7 @@ class SummaryState extends State<Summary> {
                                             ),
                                           ],
                                         ),
-                                        onPressed: () => print('Reproducir'),
+                                        onPressed: showTrailer,
                                       ),
                                       FlatButton(
                                         textColor: Colors.white,
@@ -204,7 +204,7 @@ class SummaryState extends State<Summary> {
                                             ),
                                           ],
                                         ),
-                                        onPressed: () => print('informacion'),
+                                        onPressed: () => goToDetail(show, 99),
                                       ),
                                     ],
                                   ),
@@ -233,7 +233,11 @@ class SummaryState extends State<Summary> {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return Center(child: CircularProgressIndicator());
+        return Center(
+            child: CircularProgressIndicator(
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Color.fromRGBO(219, 0, 0, 1.0)),
+        ));
       },
     );
   }

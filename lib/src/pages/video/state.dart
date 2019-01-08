@@ -1,41 +1,79 @@
 part of netflix;
 
 class VideoState extends State<Video> {
-  int _counter = 0;
+  VideoPlayerController vcontroller;
+  bool controlVisible;
+  Timer timer;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    controlVisible = true;
+    vcontroller = VideoPlayerController.asset('assets/video/promo.mp4');
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent,
+    ));
+    super.initState();
+    autoHide();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    vcontroller?.dispose();
+    timer?.cancel();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
+    super.dispose();
+  }
+
+  void handlerGesture() {
     setState(() {
-      _counter++;
+      controlVisible = !controlVisible;
     });
+    autoHide();
+  }
+
+  void autoHide() {
+    if (controlVisible) {
+      timer = Timer(
+          Duration(seconds: 5), () => setState(() => controlVisible = false));
+    } else {
+      timer?.cancel();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final aspectRatio = 0.75;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(fontWeight: FontWeight.w700),
+      backgroundColor: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          PlayerLifeCycle(
+            vcontroller,
+            (BuildContext context, VideoPlayerController controller) =>
+                AspectRatio(
+                  aspectRatio: aspectRatio,
+                  child: VideoPlayer(vcontroller),
+                ),
+          ),
+          GestureDetector(
+            child: PlayerControl(
+              vcontroller,
+              visible: controlVisible,
+              title: widget.title,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
+            onTap: handlerGesture,
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'increment',
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

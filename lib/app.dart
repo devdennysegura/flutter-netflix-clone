@@ -12,8 +12,10 @@ import 'package:flutter/services.dart';
 
 // Plugins import...
 import 'package:fluro/fluro.dart';
+import 'package:video_player/video_player.dart';
 
 // Router
+part 'src/helpers/config/constants.dart';
 part 'src/helpers/config/application.dart';
 part 'src/helpers/config/routes.dart';
 part 'src/helpers/config/route_handlers.dart';
@@ -42,7 +44,13 @@ part 'src/pages/filter/index.dart';
 part 'src/pages/filter/state.dart';
 part 'src/pages/detail/index.dart';
 part 'src/pages/detail/state.dart';
+
+// Widgets
 part 'src/widgets/tvshow-list/index.dart';
+part 'src/widgets/player-life-cycle/index.dart';
+part 'src/widgets/player-life-cycle/state.dart';
+part 'src/widgets/player-controls/index.dart';
+part 'src/widgets/player-controls/state.dart';
 
 class Netflix extends StatelessWidget {
   Netflix({Key key}) : super(key: key) {
