@@ -27,7 +27,7 @@ Flutter App with the same style as Netflix for Android and iOS.
     $ Install flutter dependencies
     $ Install Netflix NodeJS & MongoDB
     $ Run NodeJS
-    $ Change host String on `src/resources/movie_api_provider.dar`
+    $ Change host String on `src/resources/movie_api_provider.dart`
     $ flutter run
 
 Thanks

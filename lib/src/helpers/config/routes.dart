@@ -8,9 +8,11 @@ class Routes {
   static String video = '/trailer';
 
   static void configureRoutes(Router router) {
-    router.notFoundHandler = Handler(
-        handlerFunc: (BuildContext context, Map<String, List<String>> params, [dynamic object]) {
+    router.notFoundHandler = Handler(handlerFunc:
+        (BuildContext context, Map<String, List<String>> params,
+            [dynamic object]) {
       print('ROUTE WAS NOT FOUND !!!');
+      return null;
     });
     router.define(root, handler: rootHandler);
     router.define(summary, handler: summaryRouteHandler);
